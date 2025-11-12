@@ -56,7 +56,18 @@ body{
   justify-content: space-between;
   flex-wrap: wrap;
 }
-audio{ width: 100%; max-width: 100%; }
+
+/* Audio element styled to match panels */
+audio{
+  width: 100%;
+  max-width: 100%;
+  background: var(--panel);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 4px;
+  accent-color: var(--accent); /* progress / volume accent where supported */
+}
+
 .controls{
   display: inline-flex;
   gap: 14px;
@@ -119,6 +130,25 @@ audio{ width: 100%; max-width: 100%; }
   scroll-behavior: smooth;
   flex: 1 1 auto;
   min-height: 0;
+  /* Themed scrollbars (Firefox) */
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) #0f141b;
+}
+
+/* Themed scrollbars (WebKit / Chromium) */
+.list::-webkit-scrollbar{
+  width: 8px;
+}
+.list::-webkit-scrollbar-track{
+  background: #0f141b;
+  border-radius: 999px;
+}
+.list::-webkit-scrollbar-thumb{
+  background: #263449;
+  border-radius: 999px;
+}
+.list::-webkit-scrollbar-thumb:hover{
+  background: #355074;
 }
 
 /* =========================
@@ -217,4 +247,3 @@ details summary{ cursor:pointer; }
   font-weight: 600;
   margin-right: 4px;
 }
-
