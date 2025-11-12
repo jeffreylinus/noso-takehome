@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Audio · Transcript · Commentary</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="audio-row">
+      <!-- IMPORTANT: no <source> tag; JS will set .src and call .load() -->
+      <audio id="audio" controls preload="metadata"></audio>
+      <div class="controls">
+        <label title="Auto-scroll panes to active line">
+          <input type="checkbox" id="follow" checked /> follow
+        </label>
+      </div>
+    </div>
+    <div class="meta">
+      <span id="now">00:00</span>
+      <span class="sep">•</span>
+      <button id="copyLink" type="button">Copy timestamped link</button>
+    </div>
+  </header>
+
+  <main class="layout" role="main">
+    <section class="pane" id="transcriptPane" aria-label="Transcript" tabindex="0">
+      <h2>Transcript</h2>
+      <div id="transcript" class="list" role="list"></div>
+    </section>
+
+    <aside class="pane" id="commentaryPane" aria-label="Commentary" tabindex="0">
+      <h2>Commentary</h2>
+      <div id="commentary" class="list" role="list"></div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <details>
+      <summary>How to customize</summary>
+      <ol>
+        <li>Set <code>APP_DATA.audioSrc</code> in <code>data.js</code> (e.g., <code>.m4a</code>/<code>.mp3</code>).</li>
+        <li>Edit <code>data.js</code> arrays of <code>{ start, end, text, speaker? }</code> (seconds).</li>
+        <li>Serve locally or via GitHub Pages.</li>
+      </ol>
+    </details>
+  </footer>
+
+  <!-- swap data.js for data1.js here if desired -->
+  <script src="data1.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
