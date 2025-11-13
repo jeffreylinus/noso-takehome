@@ -132,61 +132,42 @@ window.APP_DATA = {
     { start: 1927.970, end: 1928.770, speaker: "Speaker 1", text: "It's on the back." }
   ],
 
+  // NEW: one-line executive summary for the app
+  summary: "Replacement/upgrade sales consult post-repair. Compliance: mixed (intro missing name/company; diagnosis measured but not confirmed; solution thorough; upsell+maintenance plan referenced; closing pushy, no explicit thanks). Customer signals preference for heat pump and quieter operation; strong rebate discussion. Misses: symptom recap/confirmation, focusing on heat pumps sooner, monthly payment comparison, calibrated close.",
+
   commentary: [
-    // ---- Compliance & Structure ----
-    { start: 12.80, end: 23.36, speaker: "Compliance", text: "[Compliance: Introduction] Tech greets by name and proposes to wrap up but does not clearly state name and company. Improvement: “Hi, I’m <name> from <company>—thanks for your time today.”" },
-    { start: 25.84, end: 43.74, speaker: "Comment", text: "[Rapport] Light small-talk and pet banter build rapport. Keep brief to protect time." },
+    // ===== Summary =====
+    { start: 12.160, end: 12.480, speaker: "Summary", text: "Call Type: Replacement/upgrade sales consultation after a diagnostic/repair visit (HVAC). Overall: Strong technical explanation and rebate navigation; compliance gaps in intro/closing; closing pressure risks. Clear buying signal for heat pump; customer rejects gas." },
 
-    { start: 50.14, end: 85.99, speaker: "Compliance", text: "[Compliance: Problem Diagnosis] Tech references measured temps and charge adjustments; identifies unit age and mold issues. Missing: an explicit recap of the customer’s original symptom and confirmation (“Does that match what you’re seeing?”)." },
+    // ===== Compliance (adherence-only) =====
+    { start: 12.800, end: 24.320, speaker: "Compliance", text: "Introduction: Greeted and moved to wrap-up, but did not state name or company." },
+    { start: 50.140, end: 85.990, speaker: "Compliance", text: "Problem Diagnosis: References measured temps and charge adjustments; identifies unit age/mold issues. No explicit recap of original symptom or customer confirmation." },
+    { start: 128.110, end: 258.070, speaker: "Compliance", text: "Solution Explanation: Four paths explained (like-for-like, higher-efficiency gas, two heat pumps) with pros/cons." },
+    { start: 389.860, end: 446.100, speaker: "Compliance", text: "Permits/HERS: States permits are pulled; introduces possible HERS test." },
+    { start: 450.380, end: 586.500, speaker: "Compliance", text: "Upsell Attempts: Promotes duct sealing and efficiency add-ons; positions warranties and newer refrigerant." },
+    { start: 586.500, end: 643.980, speaker: "Compliance", text: "Maintenance Plan Offer: Mentions warranty match contingent on maintenance plan; no explicit enrollment ask." },
+    { start: 1463.820, end: 1516.170, speaker: "Compliance", text: "Timeline & Crew: Provides install duration and crew size." },
+    { start: 1748.410, end: 1910.050, speaker: "Compliance", text: "Closing & Thank You: Attempts to close with $1k deposit/financing; no explicit thank-you or soft close." },
 
-    { start: 85.99, end: 126.99, speaker: "Comment", text: "[Solution Context] Sets expectation that performance will decline again; begins framing equipment options. Good transition, but could signpost: “I’ll outline repair vs. replace paths.”" },
+    // ===== Suggestions (improvements) =====
+    { start: 12.800, end: 24.320, speaker: "Suggestion", text: "Open with name and company: “Hi, I’m <name> with <company>.”" },
+    { start: 50.140, end: 108.030, speaker: "Suggestion", text: "Recap and confirm the customer’s symptom before presenting options: “You called about X; does that summary match?”" },
+    { start: 128.110, end: 258.070, speaker: "Suggestion", text: "Signpost the decision frame early: “Two paths—repair vs. replace; within replace, gas vs. heat pump.”" },
+    { start: 258.070, end: 344.730, speaker: "Suggestion", text: "Provide a quick price range and net-of-rebate estimate up front to anchor expectations before line-item detail." },
+    { start: 586.500, end: 643.980, speaker: "Suggestion", text: "Convert warranty mention into an explicit maintenance-plan offer with benefits and cost." },
+    { start: 645.220, end: 769.850, speaker: "Suggestion", text: "Show monthly payments for the two shortlisted systems side-by-side (term, APR, est. payment) to reduce cognitive load." },
+    { start: 1501.570, end: 1516.170, speaker: "Suggestion", text: "Customer rejects gas and prefers heat pumps—drop gas paths and focus entirely on two curated heat-pump options." },
+    { start: 1176.080, end: 1205.920, speaker: "Suggestion", text: "Avoid mid-call distractions; if a call comes in, schedule a callback instead of splitting attention." },
+    { start: 1748.410, end: 1838.260, speaker: "Suggestion", text: "Use a calibrated close: offer a 48–72 hour price hold, send written summary, and set a follow-up rather than pressing for a deposit." },
+    { start: 706.200, end: 807.710, speaker: "Suggestion", text: "Provide a written rebate checklist with exact prerequisites, expiration dates, and who-does-what (customer vs. contractor)." },
+    { start: 931.440, end: 1060.550, speaker: "Suggestion", text: "Add a simple TCO comparison (energy + maintenance) for attic vs. closet and HP vs. gas to quantify ROI and noise trade-offs." },
 
-    { start: 128.11, end: 179.59, speaker: "Compliance", text: "[Compliance: Solution Explanation Comment] Outlines four equipment paths (like-for-like, higher efficiency gas, heat pumps). Clear but long." },
-
-    { start: 128.11, end: 179.59, speaker: "Suggestion", text: "[Compliance: Solution Explanation Suggestion] Outlines four equipment paths (like-for-like, higher efficiency gas, heat pumps). Clear but long." },
-
-    { start: 180.55, end: 251.75, speaker: "Comment", text: "[Education] Explains policy context (phase-outs) and rebate environment. Good value framing; ensure claims stay precise and locally accurate." },
-
-    { start: 258.07, end: 344.73, speaker: "Suggestion", text: "[Scope & Line Items] Walkthrough of materials, credits (thermostat) and tasks. Strong transparency. Tip: summarize total price range here before deep dive to maintain orientation." },
-
-    { start: 345.29, end: 389.86, speaker: "Comment", text: "[House Condition] Notes potential plywood/mold remediation. Good risk disclosure; confirm customer authorization before adding cost." },
-
-    { start: 389.86, end: 446.10, speaker: "Compliance", text: "[Compliance: Permits/HERS] States permits pulled; flags possible HERS testing. This satisfies compliance on permitting. Nice." },
-
-    { start: 450.38, end: 586.50, speaker: "Comment", text: "[Upsell: Duct Sealing / QA] Positions duct sealing + HERS pass as a promo/bundle. Solid cross-sell tied to efficiency + compliance outcomes." },
-
-    { start: 586.50, end: 643.98, speaker: "Suggestion", text: "[Solution Explanation: Heat Pump/Inverter] Explains inverter behavior and energy savings; compares to legacy furnaces. Clear technical framing; consider adding expected seasonal COP/SEER2 ranges." },
-
-    { start: 645.22, end: 707.04, speaker: "Comment", text: "[Rebates Setup] Mentions copper line set reuse credit and confirms utility program enrollment. Good checklist behavior (qualifications + prerequisites)." },
-
-    { start: 707.04, end: 769.85, speaker: "Comment", text: "[Rebates Execution] Details SVCE + TECH rebates and customer action (upload full bill). Good ownership split (customer vs. contractor tasks)." },
-
-    { start: 770.33, end: 807.71, speaker: "Compliance", text: "[Compliance/Maintenance Plan] References promotions + HERS requirement; earlier mentioned maintenance program aligns with 10-yr warranty match—this counts as offering an ongoing plan. Improvement: ask directly if the customer wants plan details." },
-
-    { start: 931.44, end: 1060.55, speaker: "Comment", text: "[Site Options] Discusses attic vs. closet vs. garage; cost and serviceability trade-offs. Strong expectation-setting; provides rough cost deltas (+$4k if severe)." },
-
-    { start: 1073.50, end: 1138.11, speaker: "Comment", text: "[Noise Mitigation] Suggests grille change; quantifies 20% noise reduction. Good concrete value add." },
-
-    { start: 1176.08, end: 1205.92, speaker: "Suggestion", text: "[Professionalism] Tech takes another call mid-discussion. Risk: hurts flow and perceived focus. Recommendation: schedule callback or mute until done." },
-
-    { start: 1463.82, end: 1498.30, speaker: "Comment", text: "[Timeline & Crew] Communicates install duration and crew size; adds duct sealing day. Good for planning." },
-
-    { start: 1516.69, end: 1600.29, speaker: "Suggestion", text: "[Financing Options] Customer asks for payments; tech provides term/APR options. Add a quick monthly price comparison for each selected system to reduce cognitive load." },
-
-    { start: 1689.44, end: 1737.73, speaker: "Suggestion", text: "[Financing Clarity] Explains same-as-cash vs. residual/interest. Accurate framing; provide printed estimate with amortization examples." },
-
-    // ---- Sales Signals & Closing ----
-    { start: 1501.57, end: 1516.17, speaker: "Suggestion", text: "[Sales Signal] Customer explicitly prefers heat pump and rejects gas. Action: focus on 2 curated HP options; stop revisiting gas paths." },
-
-    { start: 1748.41, end: 1838.26, speaker: "Suggestion", text: "[Closing Attempt] Tech pushes for $1k deposit “today” and ties to repair fee credit. Customer states desire to discuss with spouse. Risk: pressure perceived as high. Better: offer written summary + hold price for X days + schedule follow-up." },
-
-    { start: 1838.82, end: 1910.05, speaker: "Suggestion", text: "[Persistence] Tech reiterates credit/back-out window and asks for card again. Some buyers appreciate decisiveness; others disengage. Use calibrated closing: “Would a 48-hour hold help?”" },
-
-    // ---- Summary Judgments mapped to rubric ----
-    { start: 50.14, end: 60.00, speaker: "Comment", text: "[Call Type] Replacement/upgrade sales consultation after service/diagnostic visit (HVAC)." },
-    { start: 58.00, end: 62.00, speaker: "Compliance", text: "[Compliance Verdict] Introduction: partial (no name/company). Diagnosis: present with measurements. Solution: thorough (multiple options). Upsell: yes (duct seal, higher-efficiency, heat pumps). Maintenance plan: implicitly offered (warranty match). Closing: assertive; could be more patient. Thank-you/soft close not explicit." },
-    { start: 706.20, end: 770.33, speaker: "Suggestion", text: "[Sales Insights] Strong rebate navigation; clearly assigns tasks. Opportunity: add written checklist link and expiration dates to create urgency without pressure." },
-    { start: 931.44, end: 1060.55, speaker: "Suggestion", text: "[Missed Opportunity] Provide quick TCO comparison (energy + maintenance) for attic vs. closet + HP vs. gas to anchor ROI." },
-    { start: 1463.82, end: 1498.30, speaker: "Suggestion", text: "[Next Steps] Recommend: email two heat-pump SKUs (e.g., Bryant vs. Bosch) with: price, net-of-rebate, monthly options, install window, HERS/permit steps, and noise/grille add-on line item." }
+    // ===== Comments (general observations, good/bad outside compliance fields) =====
+    { start: 25.840, end: 43.740, speaker: "Comment", text: "Rapport: Pet banter builds connection; keep brief to protect time." },
+    { start: 389.860, end: 446.100, speaker: "Comment", text: "Transparency: Clear explanation of electrical/permit steps increases trust." },
+    { start: 707.040, end: 769.850, speaker: "Comment", text: "Rebates: Strong navigation of SVCE and TECH; correctly assigns customer tasks (e.g., full utility bill upload)." },
+    { start: 931.440, end: 1060.550, speaker: "Comment", text: "Site Options: Good expectation-setting on attic vs. closet vs. garage; provides rough adders (+$4k if severe)." },
+    { start: 1073.500, end: 1138.110, speaker: "Comment", text: "Noise Mitigation: Concrete grille swap suggestion with quantified ~20% noise reduction." },
+    { start: 1501.570, end: 1516.170, speaker: "Comment", text: "Sales Signal: Customer explicitly prefers heat pumps; quiet operation is a key value driver." }
   ]
 };

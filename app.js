@@ -5,6 +5,7 @@
   const follow = document.getElementById("follow");
   const nowEl = document.getElementById("now");
   const copyLinkBtn = document.getElementById("copyLink");
+  const controlsEl = document.querySelector(".controls");
 
   const data = window.APP_DATA || { transcript: [], commentary: [] };
 
@@ -15,21 +16,26 @@
   }
 
   // ---------- Utilities ----------
-  const pad2 = (n)=> String(Math.floor(n)).padStart(2, "0");
-  const fmt = (t)=>{
+  const pad2 = (n) => String(Math.floor(n)).padStart(2, "0");
+  const fmt = (t) => {
     if (!isFinite(t) || t < 0) t = 0;
-    const m = Math.floor(t/60);
-    const s = Math.floor(t%60);
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60);
     return `${pad2(m)}:${pad2(s)}`;
   };
-  const clamp = (x, a, b)=> Math.min(b, Math.max(a, x));
-  const within = (t, seg)=> t >= seg.start && t < (seg.end ?? (seg.start + 0.01));
-  const byStart = (a, b)=> a.start - b.start;
+  const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+  const within = (t, seg) => t >= seg.start && t < (seg.end ?? (seg.start + 0.01));
+  const byStart = (a, b) => a.start - b.start;
 
   const T = (data.transcript || []).slice().sort(byStart);
-  const C = (data.commentary || []).slice().sort(byStart);
+  const C_ALL = (data.commentary || []).slice().sort(byStart);
+  let C = C_ALL; // current filtered commentary list
 
-  // ---------- Build DOM ----------
+  // ---------- Highlight state (must exist before filter uses it) ----------
+  let lastTIdx = -1;
+  let lastCIdx = -1;
+
+  // ---------- Speaker badge color cycling ----------
   const MAX_BADGE_COLORS = 6;
   const speakerIndex = new Map();
   let speakerSeq = 0;
@@ -44,9 +50,7 @@
     return `badge badge-${idx}`;
   }
 
-
-
-  function renderList(container, items, role){
+  function renderList(container, items, role) {
     container.textContent = "";
     items.forEach((seg, idx) => {
       const div = document.createElement("div");
@@ -76,17 +80,83 @@
         frag.appendChild(sep);
       }
 
-    const txt = document.createElement("span");
-    txt.textContent = seg.text;
-    frag.appendChild(txt);
+      const txt = document.createElement("span");
+      txt.textContent = seg.text;
+      frag.appendChild(txt);
 
-    div.appendChild(frag);
-    container.appendChild(div);
-  });
-}
+      div.appendChild(frag);
+      container.appendChild(div);
+    });
+  }
 
+  // ---------- Commentary type filter UI ----------
+  const commentaryTypes = Array.from(
+    new Set(C_ALL.map((seg) => seg.speaker).filter(Boolean))
+  ).sort();
+
+  const activeTypes = new Set(commentaryTypes); // start with all enabled
+
+  function applyCommentaryFilter() {
+    if (commentaryTypes.length === 0) {
+      C = C_ALL.slice();
+    } else if (activeTypes.size === 0) {
+      C = []; // intentionally show nothing if everything unchecked
+    } else {
+      C = C_ALL.filter((seg) => activeTypes.has(seg.speaker));
+    }
+    // reset commentary highlight index (transcript stays)
+    lastCIdx = -1;
+    renderList(commentaryEl, C, "comment");
+  }
+
+  // Build filter controls next to "follow"
+  if (controlsEl && commentaryTypes.length > 0) {
+    const group = document.createElement("span");
+    group.id = "commentaryFilterGroup";
+    group.style.display = "inline-flex";
+    group.style.alignItems = "center";
+    group.style.gap = "0.4rem";
+    group.style.marginLeft = "0.75rem";
+
+    const label = document.createElement("span");
+    label.textContent = "commentary:";
+    group.appendChild(label);
+
+    commentaryTypes.forEach((type) => {
+      const lbl = document.createElement("label");
+      lbl.style.display = "inline-flex";
+      lbl.style.alignItems = "center";
+      lbl.style.gap = "0.2rem";
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = true;
+      cb.value = type;
+
+      cb.addEventListener("change", () => {
+        if (cb.checked) {
+          activeTypes.add(type);
+        } else {
+          activeTypes.delete(type);
+        }
+        applyCommentaryFilter();
+        syncUI(audio.currentTime || 0);
+      });
+
+      const text = document.createElement("span");
+      text.textContent = type;
+
+      lbl.appendChild(cb);
+      lbl.appendChild(text);
+      group.appendChild(lbl);
+    });
+
+    controlsEl.appendChild(group);
+  }
+
+  // Initial render
   renderList(transcriptEl, T, "transcript");
-  renderList(commentaryEl, C, "comment");
+  applyCommentaryFilter();
 
   // ---------- Robust seeking + pending application ----------
   let pendingSeek = null;     // number|null
@@ -102,14 +172,14 @@
     if (!canSeekNow()) return;
     // Clamp into the first seekable range
     const start0 = audio.seekable.start(0);
-    const end0   = audio.seekable.end(0);
+    const end0 = audio.seekable.end(0);
     const target = clamp(pendingSeek, start0, Math.max(start0, end0 - 0.05));
     audio.currentTime = target;
     pendingSeek = null;
     syncUI(audio.currentTime);
   }
 
-  function seekTo(seconds){
+  function seekTo(seconds) {
     if (!Number.isFinite(seconds)) return;
     userSeeked = true;
     pendingSeek = seconds;
@@ -117,7 +187,7 @@
   }
 
   // ---------- Interaction ----------
-  function handleClick(e){
+  function handleClick(e) {
     const line = e.target.closest(".line");
     if (!line) return;
     const start = parseFloat(line.dataset.start);
@@ -128,8 +198,11 @@
   transcriptEl.addEventListener("click", handleClick);
   commentaryEl.addEventListener("click", handleClick);
 
-  function handleKey(e){
-    if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("line")){
+  function handleKey(e) {
+    if (
+      (e.key === "Enter" || e.key === " ") &&
+      e.target.classList.contains("line")
+    ) {
       e.preventDefault();
       const start = parseFloat(e.target.dataset.start);
       if (Number.isFinite(start)) {
@@ -141,38 +214,48 @@
   commentaryEl.addEventListener("keydown", handleKey);
 
   // ---------- Highlight + follow (always centers when enabled) ----------
-  let lastTIdx = -1, lastCIdx = -1;
-
-  function activate(container, idx){
+  function activate(container, idx) {
     const items = container.children;
     if (idx < 0 || idx >= items.length) return;
 
-    for (let i = 0; i < items.length; i++){
+    for (let i = 0; i < items.length; i++) {
       if (i === idx) items[i].classList.add("active");
       else items[i].classList.remove("active");
     }
 
     if (follow.checked) {
       const el = items[idx];
-      const offset = el.offsetTop - container.clientHeight/2 + el.clientHeight/2;
-      container.scrollTo({ top: clamp(offset, 0, container.scrollHeight), behavior: "smooth" });
+      const offset =
+        el.offsetTop - container.clientHeight / 2 + el.clientHeight / 2;
+      container.scrollTo({
+        top: clamp(offset, 0, container.scrollHeight),
+        behavior: "smooth",
+      });
     }
   }
 
-  function findActiveIndex(list, t){
-    for (let i=0;i<list.length;i++){
+  function findActiveIndex(list, t) {
+    for (let i = 0; i < list.length; i++) {
       if (within(t, list[i])) return i;
-      if (i === list.length-1 && t >= list[i].start) return i;
+      if (i === list.length - 1 && t >= list[i].start) return i;
     }
     return -1;
   }
 
-  function syncUI(curTime){
+  function syncUI(curTime) {
     nowEl.textContent = fmt(curTime);
+
     const ti = findActiveIndex(T, curTime);
-    const ci = findActiveIndex(C, curTime);
-    if (ti !== lastTIdx && ti !== -1) { activate(transcriptEl, ti); lastTIdx = ti; }
-    if (ci !== lastCIdx && ci !== -1) { activate(commentaryEl, ci); lastCIdx = ci; }
+    const ci = findActiveIndex(C, curTime); // uses filtered commentary
+
+    if (ti !== lastTIdx && ti !== -1) {
+      activate(transcriptEl, ti);
+      lastTIdx = ti;
+    }
+    if (ci !== lastCIdx && ci !== -1) {
+      activate(commentaryEl, ci);
+      lastCIdx = ci;
+    }
 
     // Keep URL param in sync for shareable deep links
     const ss = Math.floor(curTime);
@@ -203,7 +286,7 @@
   });
 
   // Some browsers only allow seeking after 'canplay' or 'durationchange'
-  ["canplay", "loadeddata", "durationchange", "progress"].forEach(evt => {
+  ["canplay", "loadeddata", "durationchange", "progress"].forEach((evt) => {
     audio.addEventListener(evt, applyPendingSeek);
   });
 
@@ -222,7 +305,7 @@
     try {
       await navigator.clipboard.writeText(url.toString());
       copyLinkBtn.textContent = "Copied ✓";
-      setTimeout(()=> copyLinkBtn.textContent = "Copy timestamped link", 1000);
+      setTimeout(() => (copyLinkBtn.textContent = "Copy timestamped link"), 1000);
     } catch {}
   });
 
