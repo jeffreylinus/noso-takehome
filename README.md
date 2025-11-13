@@ -4,7 +4,7 @@ This assignment has two parts: transcript generation, web app
 
 ## Web app
 
-This uses vanilla html/css/javascript. It features three panels, one for the transcript, one for the audio, and one for commentary. These are all seekable. Additionally there is a follow checkbox for automatically syncing audio with transcript/commentary. Finally, you can toggle each type of commentary using the provided checkboxes.
+[website](https://jeffreylinus.github.io/noso-takehome/?t=0) This app uses vanilla html/css/javascript. It features three panels, one for the transcript, one for the audio, and one for commentary. These are all seekable. Additionally there is a follow checkbox for automatically syncing audio with transcript/commentary. Finally, you can toggle each type of commentary using the provided checkboxes.
 
 ### Known Bugs
 
