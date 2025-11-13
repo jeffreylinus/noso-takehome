@@ -30,6 +30,22 @@
   const C = (data.commentary || []).slice().sort(byStart);
 
   // ---------- Build DOM ----------
+  const MAX_BADGE_COLORS = 6;
+  const speakerIndex = new Map();
+  let speakerSeq = 0;
+
+  function getSpeakerClass(name) {
+    if (!name) return "";
+    if (!speakerIndex.has(name)) {
+      speakerIndex.set(name, speakerSeq % MAX_BADGE_COLORS);
+      speakerSeq++;
+    }
+    const idx = speakerIndex.get(name);
+    return `badge badge-${idx}`;
+  }
+
+
+
   function renderList(container, items, role){
     container.textContent = "";
     items.forEach((seg, idx) => {
@@ -49,21 +65,25 @@
       stamp.textContent = fmt(seg.start);
       frag.appendChild(stamp);
 
-      if (role === "transcript" && seg.speaker) {
-        const sp = document.createElement("span");
-        sp.className = "speaker-prefix";
-        sp.textContent = `${seg.speaker}: `;
-        frag.appendChild(sp);
+      if (seg.speaker) {
+        const badge = document.createElement("span");
+        badge.className = getSpeakerClass(seg.speaker);
+        badge.textContent = seg.speaker;
+        frag.appendChild(badge);
+
+        const sep = document.createElement("span");
+        sep.textContent = ": ";
+        frag.appendChild(sep);
       }
 
-      const txt = document.createElement("span");
-      txt.textContent = seg.text;
-      frag.appendChild(txt);
+    const txt = document.createElement("span");
+    txt.textContent = seg.text;
+    frag.appendChild(txt);
 
-      div.appendChild(frag);
-      container.appendChild(div);
-    });
-  }
+    div.appendChild(frag);
+    container.appendChild(div);
+  });
+}
 
   renderList(transcriptEl, T, "transcript");
   renderList(commentaryEl, C, "comment");
